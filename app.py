@@ -3,6 +3,8 @@ import websockets
 import json
 import secrets
 from connect4 import Connect4, PLAYER1, PLAYER2
+import os
+import signal
 
 JOIN = {}
 WATCH = {}
@@ -120,8 +122,13 @@ async def handler(websocket):
         await start(websocket)
 
 async def main():
-    async with websockets.serve(handler, "", 8001):
-        await asyncio.Future()
+    loop = asyncio.get_running_loop()
+    stop = loop.create_future()
+    loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
+
+    port = int(os.environ.get("PORT", 80801))
+    async with websockets.serve(handler, "", port):
+        await stop
 
 if __name__ == "__main__":
     asyncio.run(main())

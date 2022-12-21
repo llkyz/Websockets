@@ -3,7 +3,9 @@ import { createBoard, playMove } from "./connect4.js";
 window.addEventListener("DOMContentLoaded", () => {
   const board = document.querySelector(".board");
   createBoard(board);
-  const websocket = new WebSocket("ws://localhost:8001");
+  const websocket = new WebSocket(
+    "ws://seahorse-app-jpzux.ondigitalocean.app/"
+  );
   initGame(websocket);
   receiveMoves(board, websocket);
   sendMoves(board, websocket);
